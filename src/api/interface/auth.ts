@@ -1,4 +1,5 @@
 import request from "@/core/request";
+import { memoryTokenManager } from "@/core/token/token";
 
 // 手机otp登錄
 export function loginBySmsOtp(data: InternalAuth.LoginBySmsOtpForm) {
@@ -34,3 +35,9 @@ export function refreshToken(data: InternalAuth.RefreshTokenForm) {
 export function logout() {
   return request({ url: "/token", method: "DELETE" });
 }
+
+
+memoryTokenManager.setRefreshToken(async (prevToken: InternalToken.Token) => {
+  const res = refreshToken({refreshToken: prevToken.refresh}).catch(errRes => errRes)
+  return res;
+})
